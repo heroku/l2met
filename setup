@@ -82,8 +82,6 @@ else
 	echo "Unable to update config: SECRETS=$secret"
 fi
 
-echo 'web: ./l2met -outlet="librato"' > Procfile
-
 git add .
 git commit -am "init"
 git push heroku master
