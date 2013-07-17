@@ -13,7 +13,7 @@ Convert a formatted log stream into metrics.
 ## Current Release
 
 * Tip: [v2.0beta](https://github.com/ryandotsmith/l2met/tree/v2.0beta)
-* Stable: [v1.2](https://github.com/ryandotsmith/l2met/tree/v1.2)
+* Stable: [v1.6](https://github.com/heroku/l2met/tree/v1.6)
 
 ## Synopsis
 
