@@ -10,7 +10,13 @@ import (
 
 var rc redis.Conn
 
-func init() {
+func connect() {
+	if rc != nil {
+		return
+	}
+
+	fmt.Printf("ns=utils-lock fn=connect at=start\n")
+
 	var err error
 	host, password, err := ParseRedisUrl()
 	if err != nil {
@@ -22,6 +28,19 @@ func init() {
 			err)
 	}
 	rc.Do("AUTH", password)
+
+	fmt.Printf("ns=utils-lock fn=connect at=finish\n")
+}
+
+func disconnect() {
+	fmt.Printf("ns=utils-lock fn=disconnect at=start\n")
+	rc.Close()
+	rc = nil
+	fmt.Printf("ns=utils-lock fn=disconnect at=finish\n")
+}
+
+func init() {
+	connect()
 }
 
 func UnlockPartition(key string) {
@@ -46,10 +65,12 @@ func LockPartition(ns string, max, ttl uint64) (uint64, error) {
 }
 
 func writeLock(name string, ttl uint64) (bool, error) {
+	connect()
 	new := time.Now().Unix() + int64(ttl) + 1
 	old, err := redis.Int(rc.Do("GETSET", name, new))
 	// If the ErrNil is present, the old value is set to 0.
 	if err != nil && err != redis.ErrNil && old == 0 {
+		disconnect()
 		return false, err
 	}
 	// If the new value is greater than the old
