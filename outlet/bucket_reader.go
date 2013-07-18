@@ -41,8 +41,10 @@ func (r *BucketReader) scan() {
 		//and work for like 1,000 intervals and then relock.
 		p, err := utils.LockPartition(r.Partition, r.Store.MaxPartitions(), r.Ttl)
 		if err != nil {
+			fmt.Printf("ns=bucket-reader-scan step=lock-partition at=error error=%q\n", err)
 			continue
 		}
+		fmt.Printf("ns=bucket-reader-scan step=lock-partition at=success partition=%d\n", p)
 		partition := fmt.Sprintf("outlet.%d", p)
 		for bucket := range r.Store.Scan(partition) {
 			valid := time.Now().Add(bucket.Id.Resolution)

@@ -60,6 +60,7 @@ func (s *RedisStore) Health() bool {
 func (s *RedisStore) Scan(partition string) <-chan *bucket.Bucket {
 	retBuckets := make(chan *bucket.Bucket)
 	go func(out chan *bucket.Bucket) {
+		defer utils.MeasureT("redis-store.scan", time.Now())
 		rc := s.redisPool.Get()
 		defer rc.Close()
 		defer close(out)
