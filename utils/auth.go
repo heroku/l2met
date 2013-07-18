@@ -70,10 +70,10 @@ func ParseAuth(r *http.Request) (string, string, error) {
 	}
 
 	//If we have gotten here, we have a signed, db-less authentication reque
-	//If we can verify and decrypt, then we will pass the decrypted credenti
+	//If we can verify and decrypt, then we will pass the decrypted credential
 	//to the caller. Most of the time, the username and password will be
 	//credentials to outlet providers. (e.g. Librato creds or Graphite creds
-	//We care about the validity of those credentials here. If they are wron
+	//We care about the validity of those credentials here. If they are wrong
 	//the metrics will be dropped at the outlet. Keep an eye on http
 	//authentication errors from the log output of the outlets.
 	if len(keys) > 0 {
