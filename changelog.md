@@ -1,5 +1,10 @@
 Each version of l2met corresponds to a git tag.
 
+## 1.7
+
+* Disconnect the locking redis connection on error
+* Log bucket reader partition locking and redis store scanning
+
 ## 1.6
 
 * Fix for auth path that could never complete
