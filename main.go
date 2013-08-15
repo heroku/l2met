@@ -12,7 +12,6 @@ import (
 	"os"
 	"runtime"
 	"time"
-	"strings"
 )
 
 func init() {
@@ -92,13 +91,5 @@ func recvLogs(w http.ResponseWriter, r *http.Request, recv *receiver.Receiver) {
 		http.Error(w, "Invalid Request", 400)
 		return
 	}
-
-	// record identifying bits of information when we are sent
-	// logs in the deprecated format of: measure=name val=n
-	if strings.Contains(string(b), "val=") {
-		fmt.Printf("measure.deprecated-format user=%s pass=%s user-agent=%s token=%s client=%s body=%q\n",
-			user, pass, r.Header.Get("User-Agent"), r.Header.Get("Logplex-Drain-Token"), r.Header.Get("X-Forwarded-For"), b)
-	}
-
 	recv.Receive(user, pass, b, r.URL.Query())
 }
