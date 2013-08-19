@@ -134,7 +134,7 @@ func (l *LibratoOutlet) convert() {
 		l.Conversions <- &LibratoPayload{Attr: attrs, User: bucket.Id.User, Pass: bucket.Id.Pass, Time: ft(bucket.Id.Time), Source: bucket.Id.Source, Name: bucket.Id.Name + ".perc95", Val: ff(bucket.P95())}
 		l.Conversions <- &LibratoPayload{Attr: attrs, User: bucket.Id.User, Pass: bucket.Id.Pass, Time: ft(bucket.Id.Time), Source: bucket.Id.Source, Name: bucket.Id.Name + ".perc99", Val: ff(bucket.P99())}
 		l.Conversions <- &LibratoPayload{Attr: attrs, User: bucket.Id.User, Pass: bucket.Id.Pass, Time: ft(bucket.Id.Time), Source: bucket.Id.Source, Name: bucket.Id.Name + ".last", Val: ff(bucket.Last())}
-		fmt.Printf("measure.bucket.conversion.delay=%d user=%q name=%q source=%q time=%d\n", bucket.Id.Delay(time.Now()), bucket.Id.User, bucket.Id.Name, bucket.Id.Source, ft(bucket.Id.Time))
+		fmt.Printf("measure.bucket.conversion.delay=%d bucket.user=%q bucket.name=%q bucket.source=%q bucket.time=%d\n", bucket.Id.Delay(time.Now()), bucket.Id.User, bucket.Id.Name, bucket.Id.Source, ft(bucket.Id.Time))
 	}
 }
 
