@@ -27,6 +27,9 @@ type LogRequest struct {
 	Body []byte
 	// Options from the query parameters
 	Opts map[string][]string
+	// debug info
+	DrainToken string
+	ForwardedFor string
 }
 
 type register struct {
@@ -67,8 +70,8 @@ func NewReceiver(mo, mi int) *Receiver {
 	return r
 }
 
-func (r *Receiver) Receive(user, pass string, b []byte, opts map[string][]string) {
-	r.Inbox <- &LogRequest{user, pass, b, opts}
+func (r *Receiver) Receive(user, pass string, b []byte, opts map[string][]string, drainToken, forwardedFor string) {
+	r.Inbox <- &LogRequest{user, pass, b, opts, drainToken, forwardedFor}
 }
 
 func (r *Receiver) Start() {
@@ -98,7 +101,7 @@ func (r *Receiver) Stop() {
 func (r *Receiver) Accept() {
 	for lreq := range r.Inbox {
 		rdr := bufio.NewReader(bytes.NewReader(lreq.Body))
-		for bucket := range bucket.NewBucket(lreq.User, lreq.Pass, rdr, lreq.Opts) {
+		for bucket := range bucket.NewBucket(lreq.User, lreq.Pass, rdr, lreq.Opts, lreq.DrainToken, lreq.ForwardedFor) {
 			r.numBuckets += 1
 			r.Register.Lock()
 			k := *bucket.Id

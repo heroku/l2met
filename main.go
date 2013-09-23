@@ -79,9 +79,11 @@ func recvLogs(w http.ResponseWriter, r *http.Request, recv *receiver.Receiver) {
 		return
 	}
 	user, pass, err := utils.ParseAuth(r)
+	drainToken := r.Header.Get("Logplex-Drain-Token")
+	forwardedFor := r.Header.Get("X-Forwarded-For")
 	if err != nil {
 		fmt.Printf("measure.failed-auth erro=%s user=%s pass=%s user-agent=%s token=%s client=%s\n",
-			err, user, pass, r.Header.Get("User-Agent"), r.Header.Get("Logplex-Drain-Token"), r.Header.Get("X-Forwarded-For"))
+			err, user, pass, r.Header.Get("User-Agent"), drainToken, forwardedFor)
 		http.Error(w, "Invalid Request", 400)
 		return
 	}
@@ -91,5 +93,5 @@ func recvLogs(w http.ResponseWriter, r *http.Request, recv *receiver.Receiver) {
 		http.Error(w, "Invalid Request", 400)
 		return
 	}
-	recv.Receive(user, pass, b, r.URL.Query())
+	recv.Receive(user, pass, b, r.URL.Query(), drainToken, forwardedFor)
 }
