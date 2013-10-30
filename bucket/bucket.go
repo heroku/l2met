@@ -112,8 +112,12 @@ func NewBucket(user, pass string, rdr *bufio.Reader, opts map[string][]string, d
 					id := &Id{ts, res, user, pass, name, units, src}
 					bucket := &Bucket{Id: id}
 					bucket.Vals = []float64{val}
-					fmt.Printf("measure.deprecated-format bucket.user=%q bucket.name=%q bucket.source=%q drain-token=%q msg=%q\n", user, name, src, drainToken, logLine.Msg)
-					c <- bucket
+					if strings.HasPrefix(string(logLine.Msg), "measure#") {
+						fmt.Printf("measure.new-format bucket.user=%q bucket.name=%q bucket.source=%q drain-token=%q\n", user, name, src, drainToken)
+					} else {
+						fmt.Printf("measure.deprecated-format bucket.user=%q bucket.name=%q bucket.source=%q drain-token=%q\n", user, name, src, drainToken)
+						c <- bucket
+					}
 				default:
 					if !strings.HasPrefix(k, "measure.") {
 						break
