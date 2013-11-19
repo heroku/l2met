@@ -1,3 +1,5 @@
+DEPRECATED: see https://github.com/ryandotsmith/l2met
+
 # l2met
 
 Convert a formatted log stream into metrics.
